@@ -1,0 +1,4 @@
+name: AdminAssist
+version: '1.0-SNAPSHOT'
+main: org.katok.adminAssist.AdminAssist
+api-version: '1.20'
