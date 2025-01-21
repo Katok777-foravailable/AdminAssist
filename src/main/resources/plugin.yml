@@ -1,4 +1,13 @@
 name: AdminAssist
 version: '1.0-SNAPSHOT'
-main: org.katok.adminAssist.AdminAssist
+main: org.katok.adminAssist.Main
 api-version: '1.20'
+
+permissions:
+  AdminAssist.re:
+    default: op
+
+commands:
+  re:
+    usage: /re
+    permission: AdminAssist.re

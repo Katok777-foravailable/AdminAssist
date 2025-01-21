@@ -23,9 +23,9 @@ public class CollisionEvent implements Listener {
             ||
 
             !player.getWorld().getBlockAt(
-                    (int) Math.round(player.getLocation().getDirection().getBlockX() * 2 + player.getLocation().getX()),
-                    (int) Math.round(player.getLocation().getDirection().getBlockY() * 2 + player.getLocation().getY()),
-                    (int) Math.round(player.getLocation().getDirection().getBlockZ() * 2 + player.getLocation().getZ()))
+                    (int) Math.round(player.getLocation().getDirection().getX() + player.getLocation().getX()),
+                    (int) Math.round(player.getLocation().getDirection().getY() + player.getLocation().getY()),
+                    (int) Math.round(player.getLocation().getDirection().getZ() + player.getLocation().getZ()))
                     .getBlockData().getMaterial().equals(Material.AIR)
             && player.isFlying()
             ) && player_can_pass_wall)
