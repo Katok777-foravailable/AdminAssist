@@ -2,17 +2,24 @@ package org.katok.adminAssist.Events;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.persistence.PersistentDataType;
+
+import static org.katok.adminAssist.Main.config;
+import static org.katok.adminAssist.Main.instance;
 
 public class CollisionEvent implements Listener {
+    public static final NamespacedKey walkThroughWalls = new NamespacedKey(instance, "walkThroughWalls");
+
     @EventHandler
     public void onSneak(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        boolean player_can_pass_wall = true;
+        boolean player_can_pass_wall = Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN));
 
         if((!player.getWorld().getBlockAt(player.getLocation().getBlockX(), //если под челиком если земля, либо он смотрит в блок
                 player.getLocation().getBlockY() - 1,
@@ -46,7 +53,7 @@ public class CollisionEvent implements Listener {
                 && player.isFlying()
                 ) && player_can_pass_wall)
         {
-            player.setGameMode(GameMode.CREATIVE);
+            player.setGameMode(GameMode.valueOf(config.getString("re.gamemode")));
         }
     }
 }

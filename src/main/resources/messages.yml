@@ -1,0 +1,24 @@
+console:
+  cannotFromConsole: "&#FF0000Невозможно выполнить эту команду с консоли"
+
+technicalPeculiarities:
+  needMoreArguments: "&#FF0000Недостаточно аргументов для этой команды"
+  specifyToPlayer: "&#FF0000Игрок которого вы указали, не найден"
+
+re:
+  youStillSpectate: "&#da8526Вы уже следите за игроком &#00FF00{0} &#da8526вы точно хотите переключиться на игрока &#00FF00{1}&#da8526?"
+
+unre:
+  youStopSpectate: "&#da8526Вы перестали следить за &#00FF00{0}"
+  youDoNotSpectate: "&#da8526Вы не за кем не следите"
+
+walkThroughWalls:
+  walk: "&#da8526Вы {0} &#da8526ходить через стены"
+  stop: "&#FF0000перестали"
+  start: "&#00FF00начали"
+
+other:
+  yes: "&#00FF00да"
+  no: "&#FF0000нет"
+  poke: "&#20dac1[ТЫК]"
+  forConfirm: "&#da8526Для подтверждение нажмите здесь "

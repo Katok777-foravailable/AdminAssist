@@ -28,7 +28,10 @@ public class ConfigUtil {
         return config.getInt(path);
     }
 
-    public static  Boolean getBoolean(String path){
+    public static Boolean getBoolean(String path){
         return instance.getConfig().getBoolean(path);
+    }
+    public static Boolean getBoolean(String path, FileConfiguration config){
+        return config.getBoolean(path);
     }
 }

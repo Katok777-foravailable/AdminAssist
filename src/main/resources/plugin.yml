@@ -6,8 +6,16 @@ api-version: '1.20'
 permissions:
   AdminAssist.re:
     default: op
+  AdminAssist.throughwalls:
+    default: op
 
 commands:
   re:
     usage: /re
     permission: AdminAssist.re
+  unre:
+    usage: /unre
+    permission: AdminAssist.re
+  throughwalls:
+    usage: /throughwalls
+    permission: AdminAssist.throughwalls
