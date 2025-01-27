@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
+import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import static org.katok.adminAssist.Commands.re_utils.*;
@@ -23,7 +24,7 @@ public class unre implements CommandExecutor {
 
         String player_from_data = player.getPersistentDataContainer().get(re_mode, PersistentDataType.STRING);
 
-        if(player_from_data == null || player_from_data.equals("")) {
+        if(StringUtils.isEmpty(player_from_data)) {
             player.sendMessage(getString("unre.youDoNotSpectate", messages_cfg));
             return true;
         }
@@ -36,11 +37,15 @@ public class unre implements CommandExecutor {
             player.teleport(locations.get(player.getName()));
             locations.remove(player.getName());
         }
+        if(gamemodes.containsKey(player.getName())) {
+            player.setGameMode(gamemodes.get(player.getName()));
+            gamemodes.remove(player.getName());
+        }
         if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
-        player.getPersistentDataContainer().set(re_mode, PersistentDataType.STRING, "");
-        player.getPersistentDataContainer().set(walkThroughWalls, PersistentDataType.BOOLEAN, false);
+        player.getPersistentDataContainer().remove(re_mode);
+        player.getPersistentDataContainer().remove(walkThroughWalls);
         return true;
     }
 }

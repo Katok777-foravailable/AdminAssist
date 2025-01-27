@@ -1,18 +1,21 @@
 package org.katok.adminAssist;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.katok.adminAssist.Commands.re_utils;
-import org.katok.adminAssist.Commands.throughwalls;
-import org.katok.adminAssist.Commands.unre;
+import org.katok.adminAssist.Commands.*;
+import org.katok.adminAssist.Events.CheckCheaterEvents;
 import org.katok.adminAssist.Events.ClickItemEvent;
 import org.katok.adminAssist.Events.CollisionEvent;
 import org.katok.adminAssist.Events.ReEvents;
 
 import java.io.File;
 import java.util.logging.Logger;
+
+import static org.katok.adminAssist.Commands.spawnfakeore.ores;
 
 public final class Main extends JavaPlugin {
 
@@ -53,15 +56,22 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CollisionEvent(), instance);
         getServer().getPluginManager().registerEvents(new ReEvents(), instance);
         getServer().getPluginManager().registerEvents(new ClickItemEvent(), instance);
+        getServer().getPluginManager().registerEvents(new CheckCheaterEvents(), instance);
 
         // загрузка комманд
         getCommand("re").setExecutor(new re_utils());
         getCommand("unre").setExecutor(new unre());
         getCommand("throughwalls").setExecutor(new throughwalls());
-    }
+        getCommand("checkcheater").setExecutor(new CheckCheater());
+        getCommand("spawnfakeore").setExecutor(new spawnfakeore());
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+        // загрузка руд для spawnfakeore
+        ores.put("iron", Material.IRON_ORE);
+        ores.put("diamond", Material.DIAMOND_ORE);
+        ores.put("gold", Material.GOLD_ORE);
+        ores.put("emerald", Material.EMERALD_ORE);
+        ores.put("coal", Material.COAL_ORE);
+        ores.put("redstone", Material.REDSTONE_ORE);
+        ores.put("lapis", Material.LAPIS_ORE);
     }
 }

@@ -1,8 +1,7 @@
 package org.katok.adminAssist.Commands;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -11,13 +10,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
@@ -26,7 +25,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.katok.adminAssist.Events.CollisionEvent.walkThroughWalls;
 import static org.katok.adminAssist.Main.*;
 import static org.katok.adminAssist.utils.ConfigUtil.*;
 import static org.katok.adminAssist.utils.HexUtil.color;
@@ -35,6 +33,7 @@ public class re_utils implements CommandExecutor {
     public static final NamespacedKey re_mode = new NamespacedKey(instance, "re_mode");
     public static final HashMap<String, ItemStack[]> inventories = new HashMap<>();
     public static final HashMap<String, Location> locations = new HashMap<>();
+    public static final HashMap<String, GameMode> gamemodes = new HashMap<>();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -57,7 +56,7 @@ public class re_utils implements CommandExecutor {
 
         String player_from_data = player.getPersistentDataContainer().get(re_mode, PersistentDataType.STRING);
 
-        if(!(player_from_data == null || player_from_data.equals("") || player_from_data.equals(strings[0]) || strings.length >= 2 && strings[1].equals("confirm"))) {
+        if(!(StringUtils.isEmpty(player_from_data) || player_from_data.equals(strings[0]) || strings.length >= 2 && strings[1].equals("confirm"))) {
             player.sendMessage(MessageFormat.format(getString("re.youStillSpectate", messages_cfg), player.getPersistentDataContainer().get(re_mode, PersistentDataType.STRING), strings[0]));
             player.sendMessage(getString_component("other.forConfirm", messages_cfg).append(getString_component("other.poke", messages_cfg).clickEvent(ClickEvent.runCommand("/re " + strings[0] + " confirm"))));
             return true;
@@ -72,6 +71,11 @@ public class re_utils implements CommandExecutor {
             locations.put(player.getName(), player.getLocation());
         }
 
+        if(!gamemodes.containsKey(player.getName())) {
+            gamemodes.put(player.getName(), player.getGameMode());
+        }
+
+        player.setGameMode(GameMode.valueOf(config.getString("re.gamemode")));
         player.getInventory().setContents(getReInventory(spec_player));
         player.teleport(spec_player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000,1, false, false));
@@ -83,34 +87,50 @@ public class re_utils implements CommandExecutor {
         ItemStack[] inventory = new ItemStack[41];
         Arrays.fill(inventory, new ItemStack(Material.AIR));
 
+        int slot_shift = 1;
+
         ItemStack compass = new ItemStack(Material.COMPASS);
         CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();
         compassMeta.setLodestone(p.getLocation());
+        compassMeta.setLodestoneTracked(false);
         compassMeta.getPersistentDataContainer().set(item_command, PersistentDataType.STRING, "/tp " + p.getName());
         compassMeta.setDisplayName(MessageFormat.format(getString("re.items.compass.name"), p.getName()));
         compass.setItemMeta(compassMeta);
-        inventory[getInt("re.items.compass.slot") - 1] = compass;
+        inventory[getInt("re.items.compass.slot") - slot_shift] = compass;
 
         ItemStack recoil_stick = new ItemStack(Material.STICK);
         ItemMeta recoil_stick_meta = recoil_stick.getItemMeta();
-        recoil_stick_meta.setDisplayName(getString("re.items.recoil_stick.name"));
+        recoil_stick_meta.displayName(getString_component("re.items.recoil_stick.name"));
         recoil_stick_meta.addEnchant(Enchantment.KNOCKBACK, 10, true);
         recoil_stick.setItemMeta(recoil_stick_meta);
-        inventory[getInt("re.items.recoil_stick.slot") - 1] = recoil_stick;
+        inventory[getInt("re.items.recoil_stick.slot") - slot_shift] = recoil_stick;
 
-        ItemStack through_walls = new ItemStack(Material.getMaterial(getString("re.items.through_walls.material")));
-        ItemMeta through_walls_meta = through_walls.getItemMeta();
-        through_walls_meta.setDisplayName(getString("re.items.through_walls.name"));
-        through_walls_meta.getPersistentDataContainer().set(item_command, PersistentDataType.STRING, "/throughwalls");
-        through_walls.setItemMeta(through_walls_meta);
-        inventory[getInt("re.items.through_walls.slot") - 1] = through_walls;
+        if(getBoolean("optimization.throughwalls")) {
+            ItemStack through_walls = new ItemStack(Material.getMaterial(getString("re.items.through_walls.material")));
+            ItemMeta through_walls_meta = through_walls.getItemMeta();
+            through_walls_meta.displayName(getString_component("re.items.through_walls.name"));
+            through_walls_meta.getPersistentDataContainer().set(item_command, PersistentDataType.STRING, "/throughwalls");
+            through_walls.setItemMeta(through_walls_meta);
+            inventory[getInt("re.items.through_walls.slot") - slot_shift] = through_walls;
+        } else {
+            slot_shift -= 1;
+        }
+
+        ItemStack checkcheater = new ItemStack(Material.getMaterial(getString("re.items.checkcheater.material")));
+        ItemMeta checkcheater_meta = checkcheater.getItemMeta();
+        checkcheater_meta.displayName(getString_component("re.items.checkcheater.name"));
+        checkcheater_meta.getPersistentDataContainer().set(item_command, PersistentDataType.STRING, "/checkcheater " + p.getName());
+        checkcheater.setItemMeta(checkcheater_meta);
+        inventory[getInt("re.items.checkcheater.slot") - slot_shift] = checkcheater;
 
         ItemStack quit = new ItemStack(Material.getMaterial(getString("re.items.quit.material")));
         ItemMeta quit_meta = quit.getItemMeta();
-        quit_meta.setDisplayName(getString("re.items.quit.name"));
+        quit_meta.displayName(getString_component("re.items.quit.name"));
         quit_meta.getPersistentDataContainer().set(item_command, PersistentDataType.STRING, "/unre");
         quit.setItemMeta(quit_meta);
         inventory[getInt("re.items.quit.slot") - 1] = quit;
+
+
 
         List<String> ignore_words = new ArrayList<String>(List.of("material", "color_of_reason", "command", "prefix"));
 

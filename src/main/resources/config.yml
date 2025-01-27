@@ -1,5 +1,5 @@
 re:
-  gamemode: CREATIVE
+  gamemode: CREATIVE # при вводе /re {игрок}, админа телепортирует к игрку, и админа переводит в этот гейммод
   bans:
     command: "/tempban {0} {1} {2}"
     material: "BLAZE_POWDER" # материал предмета для бана
@@ -20,7 +20,18 @@ re:
       name: "&#23dad7Проходить сквозь стены"
       slot: 3
       material: "PRISMARINE_SHARD"
+    checkcheater:
+      name: "&#23dad7Вызвать на проверку читов"
+      slot: 4
+      material: "BLAZE_ROD"
     quit:
       name: "&#23dad7Выйти из наблюдения"
       slot: 9
       material: "BARRIER"
+
+checkCheater:
+  commandOnLeave: "/tempban {0} 1d выход во время проверки" # команда которая вводиться при выходе проверяемого (вводиться от имени администратора)
+
+optimization:
+  re_compass_track: true # будет ли компас следовать за "жертвой", в режиме следования
+  throughwalls: true # включить ли прохождение сквозь стены

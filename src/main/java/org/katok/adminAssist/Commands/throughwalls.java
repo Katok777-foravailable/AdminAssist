@@ -9,11 +9,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
-import java.util.Objects;
 
 import static org.katok.adminAssist.Events.CollisionEvent.walkThroughWalls;
 import static org.katok.adminAssist.Main.config;
 import static org.katok.adminAssist.Main.messages_cfg;
+import static org.katok.adminAssist.utils.ConfigUtil.getBoolean;
 import static org.katok.adminAssist.utils.ConfigUtil.getString;
 
 public class throughwalls implements CommandExecutor {
@@ -23,8 +23,10 @@ public class throughwalls implements CommandExecutor {
             sender.sendMessage(getString("console.cannotFromConsole", messages_cfg));
             return true;
         }
+        if(!getBoolean("optimization.throughwalls")) return true;
+
         player.getPersistentDataContainer().set(walkThroughWalls, PersistentDataType.BOOLEAN, !Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN)));
-        if(Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN))) {
+        if (Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN))) {
             player.sendMessage(MessageFormat.format(getString("walkThroughWalls.walk", messages_cfg), getString("walkThroughWalls.start", messages_cfg)));
         } else {
             player.sendMessage(MessageFormat.format(getString("walkThroughWalls.walk", messages_cfg), getString("walkThroughWalls.stop", messages_cfg)));
