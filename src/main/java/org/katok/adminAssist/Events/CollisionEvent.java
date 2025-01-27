@@ -19,7 +19,7 @@ public class CollisionEvent implements Listener {
     public void onSneak(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        boolean player_can_pass_wall = Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN));
+        boolean player_can_pass_wall = !(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.INTEGER) == null || player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.INTEGER) == 0);
 
         if((!player.getWorld().getBlockAt(player.getLocation().getBlockX(), //если под челиком если земля, либо он смотрит в блок
                 player.getLocation().getBlockY() - 1,

@@ -1,5 +1,6 @@
 package org.katok.adminAssist.Events;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,8 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.StringUtil;
-import org.codehaus.plexus.util.StringUtils;
 
 import static org.katok.adminAssist.Commands.re_utils.re_mode;
 import static org.katok.adminAssist.Main.config;

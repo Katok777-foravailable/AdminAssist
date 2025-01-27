@@ -1,12 +1,12 @@
 package org.katok.adminAssist.Events;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.text.MessageFormat;
 

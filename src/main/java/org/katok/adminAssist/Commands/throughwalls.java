@@ -25,8 +25,13 @@ public class throughwalls implements CommandExecutor {
         }
         if(!getBoolean("optimization.throughwalls")) return true;
 
-        player.getPersistentDataContainer().set(walkThroughWalls, PersistentDataType.BOOLEAN, !Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN)));
-        if (Boolean.TRUE.equals(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.BOOLEAN))) {
+        if(player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.INTEGER) == null || player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.INTEGER) == 0) {
+            player.getPersistentDataContainer().set(walkThroughWalls, PersistentDataType.INTEGER, 1);
+        } else {
+            player.getPersistentDataContainer().set(walkThroughWalls, PersistentDataType.INTEGER, 0);
+        }
+
+        if (player.getPersistentDataContainer().get(walkThroughWalls, PersistentDataType.INTEGER) == 1) {
             player.sendMessage(MessageFormat.format(getString("walkThroughWalls.walk", messages_cfg), getString("walkThroughWalls.start", messages_cfg)));
         } else {
             player.sendMessage(MessageFormat.format(getString("walkThroughWalls.walk", messages_cfg), getString("walkThroughWalls.stop", messages_cfg)));
