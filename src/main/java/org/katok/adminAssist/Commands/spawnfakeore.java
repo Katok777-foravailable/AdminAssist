@@ -1,12 +1,9 @@
 package org.katok.adminAssist.Commands;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.katok.adminAssist.Main.instance;
 import static org.katok.adminAssist.Main.messages_cfg;
+import static org.katok.adminAssist.utils.ConfigUtil.getInt;
 import static org.katok.adminAssist.utils.ConfigUtil.getString;
 
 public class spawnfakeore implements CommandExecutor, TabCompleter {
@@ -58,10 +57,27 @@ public class spawnfakeore implements CommandExecutor, TabCompleter {
 
         int stage = 0; // 0 стадия +1 к x, 1 стадия это +1 к z, 2 стадия это +1 к x и z
         int bias = 0; // + к блоку
+        int cooldown = getInt("spawnFakeOre.returnBlocksCooldown");
+
+        if(strings.length > 2 && strings[2].chars().allMatch(Character::isDigit)) {
+            cooldown = Integer.parseInt(strings[2]);
+        }
 
         for(int i = 0; i < count_of_ore; i += 2) {
-            // TODO: генерация руди, i это какая по счету руда
-            // и сделать так чтобы через минут 10 блоки пропадали
+            int finalStage = stage;
+            int finalBias = bias;
+            int finalI = i;
+
+            Material one = playerWorld.getBlockAt(playerLocation.getBlockX() + (finalStage == 0 || finalStage == 2? finalBias : 0), playerLocation.getBlockY(), playerLocation.getBlockZ() + (finalStage == 1 || finalStage == 2? finalBias : 0)).getType();
+            Material two = playerWorld.getBlockAt(playerLocation.getBlockX() + (finalStage == 0 || finalStage == 2? finalBias : 0), playerLocation.getBlockY() + (finalI + 1 == count_of_ore ? 0 : 1), playerLocation.getBlockZ()  + (finalStage == 1 || finalStage == 2? finalBias : 0)).getType();
+            Bukkit.getScheduler().runTaskLater(instance, new Runnable() {
+                @Override
+                public void run() {
+                    playerWorld.getBlockAt(playerLocation.getBlockX() + (finalStage == 0 || finalStage == 2? finalBias : 0), playerLocation.getBlockY(), playerLocation.getBlockZ() + (finalStage == 1 || finalStage == 2? finalBias : 0)).setType(one);
+                    playerWorld.getBlockAt(playerLocation.getBlockX() + (finalStage == 0 || finalStage == 2? finalBias : 0), playerLocation.getBlockY() + (finalI + 1 == count_of_ore ? 0 : 1), playerLocation.getBlockZ()  + (finalStage == 1 || finalStage == 2? finalBias : 0)).setType(two);
+                }
+            }, cooldown * 20L);
+
             playerWorld.getBlockAt(playerLocation.getBlockX() + (stage == 0 || stage == 2? bias: 0), playerLocation.getBlockY(), playerLocation.getBlockZ() + (stage == 1 || stage == 2? bias: 0)).setType(ore);
             playerWorld.getBlockAt(playerLocation.getBlockX() + (stage == 0 || stage == 2? bias: 0), playerLocation.getBlockY() + (i + 1 == count_of_ore ? 0 : 1), playerLocation.getBlockZ()  + (stage == 1 || stage == 2? bias: 0)).setType(ore);
             if(stage == 2 || bias == 0) {

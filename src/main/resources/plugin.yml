@@ -27,6 +27,6 @@ commands:
     usage: /checkcheater
     permission: AdminAssist.checkCheat
   spawnfakeore:
-    usage: /spawnfakeore
+    usage: "/spawnfakeore <ore> <count of ore> <seconds to respawn ore>"
     aliases: sfo
     permission: AdminAssist.spawnfakeore
