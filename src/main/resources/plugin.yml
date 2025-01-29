@@ -1,5 +1,5 @@
 name: AdminAssist
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: org.katok.adminAssist.Main
 api-version: '1.16'
 

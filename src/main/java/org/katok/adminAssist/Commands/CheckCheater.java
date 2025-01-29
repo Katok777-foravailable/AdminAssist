@@ -1,5 +1,6 @@
 package org.katok.adminAssist.Commands;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,11 +35,15 @@ public class CheckCheater implements CommandExecutor {
             return true;
         }
 
+        if(!StringUtils.isEmpty(spec_player.getPersistentDataContainer().get(cheater_check, PersistentDataType.STRING))) {
+            spec_player.sendMessage(getString("checkCheater.stop"));
+            spec_player.getPersistentDataContainer().remove(cheater_check);
+            return true;
+        }
+
         spec_player.sendMessage(getString("checkCheater.check", messages_cfg));
-        // TODO: вешаем data на читера, и при выходе писать от лица админа, комманду которая прописана в конфиге
+
         spec_player.getPersistentDataContainer().set(cheater_check, PersistentDataType.STRING, player.getName());
-
-
         return true;
     }
 }
