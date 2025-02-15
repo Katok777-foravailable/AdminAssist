@@ -36,7 +36,7 @@ public class CheckCheater implements CommandExecutor {
         }
 
         if(!StringUtils.isEmpty(spec_player.getPersistentDataContainer().get(cheater_check, PersistentDataType.STRING))) {
-            spec_player.sendMessage(getString("checkCheater.stop"));
+            spec_player.sendMessage(getString("checkCheater.stop", messages_cfg));
             spec_player.getPersistentDataContainer().remove(cheater_check);
             return true;
         }
