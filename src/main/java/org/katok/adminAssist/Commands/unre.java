@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import static org.katok.adminAssist.Commands.re_utils.*;
@@ -41,9 +40,7 @@ public class unre implements CommandExecutor {
             player.setGameMode(gamemodes.get(player.getName()));
             gamemodes.remove(player.getName());
         }
-        if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-            player.removePotionEffect(PotionEffectType.INVISIBILITY);
-        }
+        player.chat(getString("re.vanish"));
         player.getPersistentDataContainer().remove(re_mode);
         player.getPersistentDataContainer().remove(walkThroughWalls);
         return true;

@@ -15,8 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
@@ -78,7 +76,7 @@ public class re_utils implements CommandExecutor {
         player.setGameMode(GameMode.valueOf(config.getString("re.gamemode")));
         player.getInventory().setContents(getReInventory(spec_player));
         player.teleport(spec_player);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000,1, false, false));
+        player.chat(getString("re.vanish"));
 
         return true;
     }
