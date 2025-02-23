@@ -59,6 +59,9 @@ public class re_utils implements CommandExecutor {
             player.sendMessage(getString_component("other.forConfirm", messages_cfg).append(getString_component("other.poke", messages_cfg).clickEvent(ClickEvent.runCommand("/re " + strings[0] + " confirm"))));
             return true;
         }
+        if(StringUtils.isEmpty(player_from_data)) {
+            player.chat(getString("re.vanish"));
+        }
         player.getPersistentDataContainer().set(re_mode, PersistentDataType.STRING, strings[0]);
 
         if(!inventories.containsKey(player.getName())) {
@@ -76,7 +79,6 @@ public class re_utils implements CommandExecutor {
         player.setGameMode(GameMode.valueOf(config.getString("re.gamemode")));
         player.getInventory().setContents(getReInventory(spec_player));
         player.teleport(spec_player);
-        player.chat(getString("re.vanish"));
 
         return true;
     }
